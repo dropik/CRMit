@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CRMit.E2E": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

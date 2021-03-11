@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -16,7 +16,7 @@ namespace CRMit.E2E
         public async Task OnCustomerCreate_ItIsPresentInCustomersService_AndThenOnDelete_Removed()
         {
             var client = new HttpClient();
-            const string endpoint = "https://crmit-customers/crmit/v1/customers/";
+            const string endpoint = "http://crmit-customers/crmit/v1/customers/";
             const string testEmail = "ivan.petrov@example.com";
             await WaitForServiceAvailable(client, endpoint);
 
@@ -33,14 +33,15 @@ namespace CRMit.E2E
             response = await client.GetAsync(location);
             response.EnsureSuccessStatusCode();
             var content = response.Content;
-            var result = await JsonSerializer.DeserializeAsync<Dictionary<string, dynamic>>(await content.ReadAsStreamAsync());
-            Assert.That(result["email"], Is.EqualTo(testEmail));
+            var result = await JsonSerializer.DeserializeAsync<Dictionary<string, JsonElement>>(await content.ReadAsStreamAsync());
+            var resultEmail = result["email"].GetString();
+            Assert.That(resultEmail, Is.EqualTo(testEmail));
 
             response = await client.DeleteAsync(location);
             response.EnsureSuccessStatusCode();
 
             response = await client.GetAsync(location);
-            Assert.That(response, Is.InstanceOf<NotFoundResult>());
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
         private static async Task WaitForServiceAvailable(HttpClient client, string endpoint)
@@ -55,6 +56,7 @@ namespace CRMit.E2E
                 }
                 catch (Exception)
                 {
+                    Console.Error.WriteLine("Unable to connect to Customers service");
                     Thread.Sleep(5000);
                 }
             }
