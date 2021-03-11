@@ -1,6 +1,6 @@
 version: '3.4'
 services:
-  db:
+  customers-db:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=customers_service
@@ -8,14 +8,4 @@ services:
 
   crmit-customers:
     environment:
-      - ASPNETCORE_URLS=http://+:80
       - ConnectionString=Server=db;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-
-  crmit-e2e:
-    image: ${DOCKER_REGISTRY-}crmit-e2e
-    build:
-      context: .
-      dockerfile: test/CRMit.E2E/Dockerfile

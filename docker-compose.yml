@@ -1,18 +1,30 @@
 version: '3.4'
 
 services:
-  db:
+  customers-db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       - MYSQL_DATABASE=CustomersDB
-    ports:
-      - 3306:3306
+    networks:
+      - crmit-customers
 
   crmit-customers:
     image: dropik/crmit-customers:v1.0.0-preview
+    environment:
+      - ASPNETCORE_URLS=http://+:80
     depends_on:
-      - db
-    ports:
-      - 8080:80
+      - customers-db
+    links:
+      - 'customers-db:db'
+    networks:
+      - crmit-services
+      - crmit-customers
+
+networks:
+  crmit-services:
+    name: crmit-services
+
+  crmit-customers:
+    name: crmit-customers
