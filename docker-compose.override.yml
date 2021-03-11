@@ -7,5 +7,6 @@ services:
       - MYSQL_PASSWORD=password
 
   crmit-customers:
+    image: dropik/crmit-customers:v1.0.0-preview
     environment:
       - ConnectionString=Server=db;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password

@@ -11,13 +11,14 @@ services:
       - crmit-customers
 
   crmit-customers:
-    image: dropik/crmit-customers:v1.0.0-preview
     environment:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - customers-db
     links:
       - 'customers-db:db'
+    ports:
+      - 8080:80
     networks:
       - crmit-services
       - crmit-customers
