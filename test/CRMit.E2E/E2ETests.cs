@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CRMit.E2E
@@ -14,8 +16,11 @@ namespace CRMit.E2E
         public async Task OnCustomerCreate_ItIsPresentInCustomersService_AndThenOnDelete_Removed()
         {
             var client = new HttpClient();
+            const string endpoint = "https://crmit-customers/crmit/v1/customers/";
             const string testEmail = "ivan.petrov@example.com";
-            var response = await client.PostAsJsonAsync("https://crmit-customers/crmit/v1/customers/",
+            await WaitForServiceAvailable(client, endpoint);
+
+            var response = await client.PostAsJsonAsync(endpoint,
                                                         new
                                                         {
                                                             name = "Ivan",
@@ -36,6 +41,23 @@ namespace CRMit.E2E
 
             response = await client.GetAsync(location);
             Assert.That(response, Is.InstanceOf<NotFoundResult>());
+        }
+
+        private static async Task WaitForServiceAvailable(HttpClient client, string endpoint)
+        {
+            while (true)
+            {
+                try
+                {
+                    var response = await client.GetAsync(endpoint);
+                    response.EnsureSuccessStatusCode();
+                    break;
+                }
+                catch (Exception)
+                {
+                    Thread.Sleep(5000);
+                }
+            }
         }
     }
 }
