@@ -16,7 +16,7 @@ namespace CRMit.E2E
         public async Task OnCustomerCreate_ItIsPresentInCustomersService_AndThenOnDelete_Removed()
         {
             var client = new HttpClient();
-            const string endpoint = "http://crmit-customers/crmit/v1/customers/";
+            const string endpoint = "http://localhost:8000/crmit/v1/customers/";
             const string testEmail = "ivan.petrov@example.com";
             await WaitForServiceAvailable(client, endpoint);
 

@@ -7,16 +7,9 @@ between the customer itself and the busyness (which in this case is a generic it
 customer data, handles items, purchases and various notifications to customer.
 
 ## Getting Started
-For demonstration purposes, composing microservices is made via docker-compose. To bootstrap the system, run on Windows:
-```cmd
-> config.cmd
-> run.cmd
-```
-or Unix:
-```cmd
-$ ./config.sh
-$ ./run.sh
+This repository is dedicated mostly for developers (for me) and for e2e testing. So to run the environment in a preview mode, use docker-compose:
+```sh
+> docker-compose -f docker-compose.yml up
 ```
 
-Once you'll see the message, that Customers service is listening for requests, check http://localhost:8080/crmit/v1/customers/
-with a software like Postman.
+Once the Customers service is up, you can observe it with a software like Postman.

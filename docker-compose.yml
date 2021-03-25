@@ -7,25 +7,17 @@ services:
     restart: always
     environment:
       - MYSQL_DATABASE=CustomersDB
-    networks:
-      - crmit-customers
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=customers_service
+      - MYSQL_PASSWORD=password
 
   crmit-customers:
+    image: dropik/crmit-customers:staging
     environment:
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_URLS=http://+
+      - ConnectionString=Server=customers-db;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password
     depends_on:
       - customers-db
-    links:
-      - 'customers-db:db'
     ports:
-      - 8080:80
-    networks:
-      - crmit-services
-      - crmit-customers
-
-networks:
-  crmit-services:
-    name: crmit-services
-
-  crmit-customers:
-    name: crmit-customers
+      - 8000:80

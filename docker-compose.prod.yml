@@ -1,5 +1,0 @@
-version: '3.4'
-
-services:
-  crmit-customers:
-    image: dropik/crmit-customers:v1.0.0
