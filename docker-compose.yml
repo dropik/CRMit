@@ -16,7 +16,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
       - ASPNETCORE_URLS=http://+
-      - ConnectionString=Server=customers-db;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password
+      - DB__SERVER=customers-db
+      - DB__PORT=3306
+      - DB__DATABASE=CustomersDB
+      - DB__USER=customers_service
+      - DB__PASSWORD=password
     depends_on:
       - customers-db
     ports:
