@@ -11,9 +11,13 @@ services:
     image: dropik/crmit-customers:staging
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
-      - ASPNETCORE_URLS=http://+
+      - ASPNETCORE_URLS=https://+
       - CONNECTIONSTRINGS__CUSTOMERSDB=Server=customers-db; Database=CustomersDB; User ID=sa; Password=Password1234;
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/crmit.customers.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1234
+    volumes:
+      - ${HOME}/.aspnet/https:/https/
     depends_on:
       - customers-db
     ports:
-      - 8000:80
+      - 8001:443
