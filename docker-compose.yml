@@ -2,25 +2,17 @@ version: '3.4'
 
 services:
   customers-db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      - MYSQL_DATABASE=CustomersDB
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=customers_service
-      - MYSQL_PASSWORD=password
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password1234
 
   crmit-customers:
     image: dropik/crmit-customers:staging
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
       - ASPNETCORE_URLS=http://+
-      - DB__SERVER=customers-db
-      - DB__PORT=3306
-      - DB__DATABASE=CustomersDB
-      - DB__USER=customers_service
-      - DB__PASSWORD=password
+      - CONNECTIONSTRINGS__CUSTOMERSDB=Server=customers-db; Database=CustomersDB; User ID=sa; Password=Password1234;
     depends_on:
       - customers-db
     ports:

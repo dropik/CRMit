@@ -56,7 +56,7 @@ namespace CRMit.E2E
                 }
                 catch (Exception)
                 {
-                    Console.Error.WriteLine("Unable to connect to Customers service");
+                    Console.Error.WriteLine("Waiting for Customers service...");
                     Thread.Sleep(5000);
                 }
             }
