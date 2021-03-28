@@ -10,22 +10,22 @@ using System.Threading.Tasks;
 
 namespace CRMit.E2E
 {
-    public class E2ETests
+    public class ItemsE2E
     {
         [Test]
-        public async Task OnCustomerCreate_ItIsPresentInCustomersService_AndThenOnDelete_Removed()
+        public async Task OnItemCreate_ItIsPresentInItemsService_AndThenOnDelete_Removed()
         {
             var client = new HttpClient();
-            const string endpoint = "https://localhost:8001/crmit/v1/customers/";
-            const string testEmail = "ivan.petrov@example.com";
+            const string endpoint = "https://localhost:8002/crmit/v1/items/";
+            const string testName = "Laptop";
             await WaitForServiceAvailable(client, endpoint);
 
             var response = await client.PostAsJsonAsync(endpoint,
                                                         new
                                                         {
-                                                            name = "Ivan",
-                                                            surname = "Petrov",
-                                                            email = testEmail
+                                                            name = testName,
+                                                            description = "A brand new laptop.",
+                                                            price = 100
                                                         });
             response.EnsureSuccessStatusCode();
 
@@ -34,8 +34,8 @@ namespace CRMit.E2E
             response.EnsureSuccessStatusCode();
             var content = response.Content;
             var result = await JsonSerializer.DeserializeAsync<Dictionary<string, JsonElement>>(await content.ReadAsStreamAsync());
-            var resultEmail = result["email"].GetString();
-            Assert.That(resultEmail, Is.EqualTo(testEmail));
+            var resultName = result["name"].GetString();
+            Assert.That(resultName, Is.EqualTo(testName));
 
             response = await client.DeleteAsync(location);
             response.EnsureSuccessStatusCode();
@@ -56,7 +56,7 @@ namespace CRMit.E2E
                 }
                 catch (Exception)
                 {
-                    Console.Error.WriteLine("Waiting for Customers service...");
+                    Console.Error.WriteLine("Waiting for Items service...");
                     Thread.Sleep(5000);
                 }
             }

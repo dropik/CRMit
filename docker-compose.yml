@@ -21,3 +21,24 @@ services:
       - customers-db
     ports:
       - 8001:443
+
+  items-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password1234
+
+  crmit-items:
+    image: dropik/crmit-items:staging
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_URLS=https://+
+      - CONNECTIONSTRINGS__ITEMSDB=Server=items-db; Database=ItemsDB; User ID=sa; Password=Password1234;
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.crt
+      - ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/https/localhost.key
+    volumes:
+      - ${HOME}/.aspnet/https:/https/
+    depends_on:
+      - items-db
+    ports:
+      - 8002:443
